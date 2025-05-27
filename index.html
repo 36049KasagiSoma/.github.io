@@ -102,9 +102,29 @@
       50% { transform: scale(1.1); filter: brightness(1.5) drop-shadow(0 0 10px currentColor); }
       100% { transform: scale(1); filter: brightness(1); }
     }
+    #animatedBackground {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background: linear-gradient(-45deg, #1e1e2f, #2f1e2f, #1e2f2f, #2f2f1e);
+
+      background-size: 400% 400%;
+      animation: bgMove 20s ease infinite;
+      filter: blur(10px) brightness(0.6);
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
   </style>
 </head>
 <body>
+  <div id="animatedBackground"></div>
   <div id="main">
     <h1>てとのげーむ</h1>
     <div id="instructions">
