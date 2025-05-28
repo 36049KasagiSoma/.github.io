@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エラー - ゲーム一覧</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.1);
+        }
+
+        .error-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .error-message {
+            background-color: #222;
+            border: 1px solid #444;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .error-desc {
+            color: #ccc;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 12px 24px;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: #555;
+        }
+
+        .primary-btn {
+            background-color: #555;
+            border-color: #777;
+        }
+
+        .primary-btn:hover {
+            background-color: #666;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <div class="error-code">404</div>
+        <div class="error-title">ページが見つかりません</div>
+        
+        <div class="error-message">
+            <div class="error-desc">
+                申し訳ございません。お探しのページは存在しないか、移動または削除された可能性があります。<br>
+                URLをご確認いただくか、以下のオプションをお試しください。
+            </div>
+            
+            <div class="action-buttons">
+                <a href="index.html" class="action-btn primary-btn">ゲーム一覧に戻る</a>
+                <a href="javascript:history.back()" class="action-btn">前のページに戻る</a>
+                <a href="javascript:location.reload()" class="action-btn">ページを再読み込み</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>問題が解決しない場合は、しばらく時間をおいてから再度お試しください</p>
+    </div>
+
+    <script>
+        // URLパラメータから詳細情報を取得して表示
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorType = urlParams.get('type');
+        const errorCode = urlParams.get('code');
+        
+        if (errorCode && errorCode !== '404') {
+            document.querySelector('.error-code').textContent = errorCode;
+        }
+        
+        // エラータイプに応じてメッセージを変更
+        if (errorType) {
+            const errorTitle = document.querySelector('.error-title');
+            const errorDesc = document.querySelector('.error-desc');
+            
+            switch(errorType) {
+                case 'game_not_found':
+                    errorTitle.textContent = 'ゲームが見つかりません';
+                    errorDesc.innerHTML = 'お探しのゲームは現在利用できません。<br>ゲーム一覧ページから他のゲームをお試しください。';
+                    break;
+                case 'server_error':
+                    errorTitle.textContent = 'サーバーエラー';
+                    errorDesc.innerHTML = 'サーバーで問題が発生しました。<br>しばらく時間をおいてから再度お試しください。';
+                    document.querySelector('.error-code').textContent = '500';
+                    break;
+                case 'maintenance':
+                    errorTitle.textContent = 'メンテナンス中';
+                    errorDesc.innerHTML = '現在メンテナンス中です。<br>しばらくお待ちいただき、後ほど再度アクセスしてください。';
+                    document.querySelector('.error-code').textContent = '503';
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
