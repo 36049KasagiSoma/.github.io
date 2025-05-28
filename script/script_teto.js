@@ -698,6 +698,8 @@ const canvas = document.getElementById('tetris');
         }
 
         // Next表示位置を下に移動
+        sideCtx.fillStyle = 'white';
+        sideCtx.font = '14px Arial';
         sideCtx.fillText('Next', 10, 240);
         nextQueue.forEach((matrix, i) => {
             drawMatrix(matrix, {x: 1, y: 18 + i * 3}, sideCtx, 0.7);
