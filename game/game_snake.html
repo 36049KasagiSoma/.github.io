@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>すねーくゲーム</title>
+  <link rel="stylesheet" href="../css/style_snake.css">
+</head>
+<body>
+  <h1>すねーくゲーム</h1>
+
+  <canvas id="gameCanvas" width="480" height="320"></canvas>
+
+  <div class="info">
+    ← ↑ ↓ → または W A S D キーで蛇を操作します<br>
+    エサを食べて蛇を長くしよう！
+  </div>
+
+  <div id="score" style="font-size: 18px; margin-top: 10px;">スコア: 0</div>
+  <div id="gameOverText" class="game-over" style="display: none;">ゲームオーバー！</div>
+  <button id="restartBtn" onclick="restartGame()" style="display: none;">もう一度プレイ</button>
+  <button onclick="location.href='../index.html'">戻る</button>
+
+  <script src="../script/script_snake.js"></script>
+</body>
+</html>
