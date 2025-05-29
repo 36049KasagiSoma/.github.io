@@ -460,13 +460,18 @@ function checkCollisions() {
         bullet.y + bullet.height > player.y) {
 
         alienBullets.splice(bulletIndex, 1);
-        lives--;
-        player.invulnerable = 120; // 2秒間無敵
-        createParticles(player.x + player.width / 2, player.y + player.height / 2,
-          '#ff6347');
+        if (playerPower === 4) {
+        // シールドがあるのでダメージは受けないが、弾丸は消える
+        　createParticles(player.x + player.width / 2, player.y + player.height / 2,'#00ffff'); 
+           playerPower = 1;
+        }else{
+          lives--;
+          player.invulnerable = 120; // 2秒間無敵
+          createParticles(player.x + player.width / 2, player.y + player.height / 2,'#ff6347');
 
-        if (lives <= 0) {
-          endGame();
+          if (lives <= 0) {
+            endGame();
+          }
         }
         updateUI();
       }
