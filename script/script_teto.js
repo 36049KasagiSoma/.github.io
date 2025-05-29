@@ -191,22 +191,33 @@ const canvas = document.getElementById('tetris');
       }
     }
 
-    function randomPieceType() {
-      const pieces = 'TJLSZIO';
-      return pieces[Math.floor(Math.random() * pieces.length)];
-    }
+	 function getNextPieceFromBag() {
+	  if (bagIndex >= currentBag.length) {
+	    // 新しいバッグを生成
+	    currentBag = ['T', 'J', 'L', 'S', 'Z', 'I', 'O'];
+	    // Fisher-Yatesアルゴリズムでシャッフル
+	    for (let i = currentBag.length - 1; i > 0; i--) {
+	      const j = Math.floor(Math.random() * (i + 1));
+	      [currentBag[i], currentBag[j]] = [currentBag[j], currentBag[i]];
+	    }
+	    bagIndex = 0;
+	  }
+	  return currentBag[bagIndex++];
+	}
 
     let arena = createMatrix(COLS, ROWS);
     let nextQueue = [];
+	let currentBag = []; // 追加
+	let bagIndex = 0;    // 追加
     let holdMatrix = null;
     let canHold = true;
 
     // ネクストキューを初期化
     function initializeNextQueue() {
-      nextQueue = [];
-      for (let i = 0; i < 5; i++) {
-        nextQueue.push(createPiece(randomPieceType()));
-      }
+	  nextQueue = [];
+	  for (let i = 0; i < 5; i++) {
+	    nextQueue.push(createPiece(getNextPieceFromBag())); // 修正
+  	　}
     }
 
     const player = {
@@ -235,7 +246,7 @@ const canvas = document.getElementById('tetris');
       }
       // ネクストキューから次のピースを取得
       player.matrix = cloneMatrix(nextQueue.shift());
-      nextQueue.push(createPiece(randomPieceType()));
+      nextQueue.push(createPiece(getNextPieceFromBag()));
       
       // ピースタイプを判定（マトリックスから）
       if (player.matrix.length === 2 && player.matrix[0].length === 3 && player.matrix[0][1] === 1) {
@@ -284,6 +295,8 @@ const canvas = document.getElementById('tetris');
 
       // 盤面リセット
       arena = createMatrix(COLS, ROWS);
+	　currentBag = [];
+  　　bagIndex = 0;
       initializeNextQueue();
       holdMatrix = null;
       canHold = true;
