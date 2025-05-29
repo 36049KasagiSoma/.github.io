@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宇宙侵略者ゲーム</title>
+  <link rel="stylesheet" href="../css/style_inb.css">
+</head>
+
+<body>
+  <h1>宇宙侵略者 - 強化版</h1>
+  <div class="game-stats">
+    <div class="score">スコア:
+      <span id="score"></span>
+    </div>
+    <div class="lives">ライフ:
+      <span id="lives">3</span>
+    </div>
+    <div class="level">レベル:
+      <span id="level">1</span>
+    </div>
+    <div class="power">パワー:
+      <span id="power">1</span>
+    </div>
+  </div>
+  <canvas id="gameCanvas" width="640" height="480">
+  </canvas>
+  <div class="info">移動: ←→キー または A・Dキー | 射撃: スペースキー または Wキー
+    <br>パワーアップアイテムを取って強化しよう！</div>
+  <button onclick="startGame()">ゲーム開始</button>
+  <button onclick="goBack()">戻る</button>
+  <div id="gameOver" class="game-over" style="display: none;">ゲームオーバー！</div>
+  <script src="../script/script_inb.js"></script>
+</body>
+
+</html>
