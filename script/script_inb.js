@@ -11,18 +11,19 @@ let score = 0;
 let lives = 3;
 let level = 1;
 let playerPower = 1;
+let powerDuration = 0;
 let keys = {};
 let canShoot = true;
 let shootCooldown = 0;
 
 // プレイヤー
 const player = {
-	x: canvas.width / 2 - 25,
-	y: canvas.height - 60,
-	width: 50,
-	height: 30,
-	speed: 5,
-	invulnerable: 0
+  x: canvas.width / 2 - 25,
+  y: canvas.height - 60,
+  width: 50,
+  height: 30,
+  speed: 5,
+  invulnerable: 0
 };
 
 // 弾丸
@@ -55,217 +56,172 @@ let particles = [];
 // 星の背景
 let stars = [];
 
-// 初期化時に星を生成
 function initStars() {
-	stars = [];
-	for (let i = 0; i < 80; i++) {
-		stars.push({
-			x: Math.random() * canvas.width,
-			y: Math.random() * canvas.height,
-			speed: Math.random() * 0.5 + 0.1,
-			brightness: Math.random() * 0.8 + 0.2
-		});
-	}
+  stars = [];
+  for (let i = 0; i < 80; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      speed: Math.random() * 0.5 + 0.1,
+      brightness: Math.random() * 0.8 + 0.2
+    });
+  }
 }
 
-// パーティクル生成
 function createParticles(x, y, color, count = 5) {
-	for (let i = 0; i < count; i++) {
-		particles.push({
-			x: x,
-			y: y,
-			vx: (Math.random() - 0.5) * 6,
-			vy: (Math.random() - 0.5) * 6,
-			color: color,
-			life: 30,
-			maxLife: 30
-		});
-	}
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.5) * 6,
+      color: color,
+      life: 30,
+      maxLife: 30
+    });
+  }
 }
 
-// ゲーム初期化
 function initGame() {
-	score = 0;
-	lives = 3;
-	level = 1;
-	playerPower = 1;
-	bullets = [];
-	alienBullets = [];
-	aliens = [];
-	powerUps = [];
-	particles = [];
-	boss = null;
-	bossAppeared = false;
-	canShoot = true;
-	shootCooldown = 0;
-	alienSpeed = 1.5;
+  score = 0;
+  lives = 3;
+  level = 1;
+  playerPower = 1;
+  powerDuration = 0;
+  bullets = [];
+  alienBullets = [];
+  aliens = [];
+  powerUps = [];
+  particles = [];
+  boss = null;
+  bossAppeared = false;
+  canShoot = true;
+  shootCooldown = 0;
+  alienSpeed = 1.5;
 
-	initStars();
-	createAliens();
+  initStars();
+  createAliens();
 
-	player.x = canvas.width / 2 - 25;
-	player.invulnerable = 0;
-	updateUI();
+  player.x = canvas.width / 2 - 25;
+  player.invulnerable = 0;
+  updateUI();
 }
 
-// エイリアン生成
 function createAliens() {
-	aliens = [];
-	for (let row = 0; row < alienRows; row++) {
-		for (let col = 0; col < alienCols; col++) {
-			const alienType = row < 2 ? 2 : 1; // 上2行は強いエイリアン
-			aliens.push({
-				x: col * 65 + 80,
-				y: row * 45 + 50,
-				width: 35,
-				height: 25,
-				alive: true,
-				type: alienType,
-				hp: alienType
-			});
-		}
-	}
+  aliens = [];
+  for (let row = 0; row < alienRows; row++) {
+    for (let col = 0; col < alienCols; col++) {
+      const alienType = row < 2 ? 2 : 1;
+      aliens.push({
+        x: col * 65 + 80,
+        y: row * 45 + 50,
+        width: 35,
+        height: 25,
+        alive: true,
+        type: alienType,
+        hp: alienType
+      });
+    }
+  }
 }
 
-// UI更新
 function updateUI() {
-	scoreElement.textContent = score;
-	livesElement.textContent = lives;
-	levelElement.textContent = level;
-	powerElement.textContent = playerPower;
+  scoreElement.textContent = score;
+  livesElement.textContent = lives;
+  levelElement.textContent = level;
+  powerElement.textContent = playerPower;
 }
 
-// ゲーム開始
 function startGame() {
-	if (!gameRunning) {
-		gameRunning = true;
-		initGame();
-		gameLoop();
-	}
+  if (!gameRunning) {
+    gameRunning = true;
+    initGame();
+    gameLoop();
+  }
 }
 
-// 戻るボタンの処理
 function goBack() {
-	window.location.href = '../index.html';
+  window.location.href = '../index.html';
 }
 
-// キーイベント
 document.addEventListener('keydown', (e) => {
-	keys[e.code] = true;
+  keys[e.code] = true;
 });
 
 document.addEventListener('keyup', (e) => {
-	keys[e.code] = false;
+  keys[e.code] = false;
 });
 
-// プレイヤー移動と射撃
 function movePlayer() {
-	const speed = player.speed + (playerPower > 3 ? 2 : 0); // スピードアップパワー
+  const speed = player.speed + (playerPower > 3 ? 2 : 0);
 
-	if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > 0) {
-		player.x -= speed;
-	}
-	if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.width) {
-		player.x += speed;
-	}
+  if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > 0) {
+    player.x -= speed;
+  }
+  if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.width) {
+    player.x += speed;
+  }
 
-	// 無敵時間減少
-	if (player.invulnerable > 0) {
-		player.invulnerable--;
-	}
+  if (player.invulnerable > 0) {
+    player.invulnerable--;
+  }
 
-	// 射撃処理
-	if ((keys['Space'] || keys['KeyW']) && canShoot) {
-		shoot();
-	}
+  if ((keys['Space'] || keys['KeyW']) && canShoot) {
+    shoot();
+  }
 }
 
 // 射撃
 function shoot() {
-	if (gameRunning && canShoot) {
-		const cooldown = playerPower === 2 ? 5 : 10; // ラピッドファイア
+  if (gameRunning && canShoot) {
+    const cooldown = playerPower === 2 ? 5 : 10;
 
-		if (playerPower === 3 || playerPower === 4) { // トリプルショット
-			bullets.push({
-				x: player.x + player.width / 2 - 2,
-				y: player.y,
-				width: 4,
-				height: 10,
-				vx: 0,
-				vy: -bulletSpeed
-			});
-			bullets.push({
-				x: player.x + player.width / 2 - 2,
-				y: player.y,
-				width: 4,
-				height: 10,
-				vx: -2,
-				vy: -bulletSpeed
-			});
-			bullets.push({
-				x: player.x + player.width / 2 - 2,
-				y: player.y,
-				width: 4,
-				height: 10,
-				vx: 2,
-				vy: -bulletSpeed
-			});
-		} else {
-			bullets.push({
-				x: player.x + player.width / 2 - 2,
-				y: player.y,
-				width: 4,
-				height: 10,
-				vx: 0,
-				vy: -bulletSpeed
-			});
-		}
+    if (playerPower === 3 || playerPower === 4) {
+      bullets.push({ x: player.x + player.width / 2 - 2, y: player.y, width: 4, height: 10, vx: 0, vy: -bulletSpeed });
+      bullets.push({ x: player.x + player.width / 2 - 2, y: player.y, width: 4, height: 10, vx: -2, vy: -bulletSpeed });
+      bullets.push({ x: player.x + player.width / 2 - 2, y: player.y, width: 4, height: 10, vx: 2, vy: -bulletSpeed });
+    } else {
+      bullets.push({ x: player.x + player.width / 2 - 2, y: player.y, width: 4, height: 10, vx: 0, vy: -bulletSpeed });
+    }
 
-		canShoot = false;
-		shootCooldown = cooldown;
-	}
+    canShoot = false;
+    shootCooldown = cooldown;
+  }
 }
 
 // 射撃クールダウン更新
 function updateShootCooldown() {
-	if (shootCooldown > 0) {
-		shootCooldown--;
-		if (shootCooldown === 0) {
-			canShoot = true;
-		}
-	}
+  if (shootCooldown > 0) {
+    shootCooldown--;
+    if (shootCooldown === 0) {
+      canShoot = true;
+    }
+  }
 }
 
 // 弾丸更新
 function updateBullets() {
-	bullets = bullets.filter(bullet => {
-		bullet.y += bullet.vy;
-		bullet.x += bullet.vx;
-		return bullet.y > 0 && bullet.x > 0 && bullet.x < canvas.width;
-	});
+  bullets = bullets.filter(bullet => {
+    bullet.y += bullet.vy;
+    bullet.x += bullet.vx;
+    return bullet.y > 0 && bullet.x > 0 && bullet.x < canvas.width;
+  });
 }
 
 // パワーアップアイテム生成
 function spawnPowerUp(x, y) {
-	if (Math.random() < 0.3) { // 30%の確率
-		const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-		powerUps.push({
-			x: x,
-			y: y,
-			width: 20,
-			height: 20,
-			type: type,
-			speed: 2
-		});
-	}
+  if (Math.random() < 0.3) {
+    const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+    powerUps.push({ x: x, y: y, width: 20, height: 20, type: type, speed: 2 });
+  }
 }
 
 // パワーアップアイテム更新
 function updatePowerUps() {
-	powerUps = powerUps.filter(powerUp => {
-		powerUp.y += powerUp.speed;
-		return powerUp.y < canvas.height;
-	});
+  powerUps = powerUps.filter(powerUp => {
+    powerUp.y += powerUp.speed;
+    return powerUp.y < canvas.height;
+  });
 }
 
 // ボス生成
@@ -433,33 +389,32 @@ function checkCollisions() {
 	});
 
 	// パワーアップアイテムとプレイヤー
-	powerUps.forEach((powerUp, index) => {
-		if (powerUp.x < player.x + player.width &&
-			powerUp.x + powerUp.width > player.x &&
-			powerUp.y < player.y + player.height &&
-			powerUp.y + powerUp.height > player.y) {
+	 powerUps.forEach((powerUp, index) => {
+    if (powerUp.x < player.x + player.width &&
+        powerUp.x + powerUp.width > player.x &&
+        powerUp.y < player.y + player.height &&
+        powerUp.y + powerUp.height > player.y) {
 
-			// パワーアップ効果
-			switch (powerUp.type) {
-				case 'speed':
-					if (playerPower < 4) playerPower = Math.max(playerPower, 1);
-					break;
-				case 'rapid':
-					playerPower = Math.max(playerPower, 2);
-					break;
-				case 'triple':
-					playerPower = Math.max(playerPower, 3);
-					break;
-				case 'shield':
-					playerPower = 4;
-					break;
-			}
-
-			createParticles(powerUp.x, powerUp.y, '#00ff00');
-			powerUps.splice(index, 1);
-			updateUI();
-		}
-	});
+      switch (powerUp.type) {
+        case 'speed':
+          playerPower = Math.max(playerPower, 1);
+          break;
+        case 'rapid':
+          playerPower = Math.max(playerPower, 2);
+          break;
+        case 'triple':
+          playerPower = Math.max(playerPower, 3);
+          break;
+        case 'shield':
+          playerPower = 4;
+          break;
+      }
+      powerDuration = 600;
+      createParticles(powerUp.x, powerUp.y, '#00ff00');
+      powerUps.splice(index, 1);
+      updateUI();
+    }
+  });
 
 	// エイリアンの弾丸とプレイヤー
 	if (player.invulnerable === 0) {
@@ -608,23 +563,34 @@ function draw() {
 	ctx.textAlign = 'left';
 }
 
+function updatePowerDuration() {
+  if (powerDuration > 0) {
+    powerDuration--;
+    if (powerDuration === 0) {
+      playerPower = 1;
+      updateUI();
+    }
+  }
+}
+
 // ゲームループ
 function gameLoop() {
-	if (gameRunning) {
-		movePlayer();
-		updateShootCooldown();
-		updateBullets();
-		updateAliens();
-		updateBoss();
-		updateAlienBullets();
-		updatePowerUps();
-		updateParticles();
-		updateStars();
-		checkCollisions();
-		checkGameEnd();
-		draw();
-		requestAnimationFrame(gameLoop);
-	}
+  if (gameRunning) {
+    movePlayer();
+    updateShootCooldown();
+    updateBullets();
+    updateAliens();
+    updateBoss();
+    updateAlienBullets();
+    updatePowerUps();
+    updatePowerDuration();
+    updateParticles();
+    updateStars();
+    checkCollisions();
+    checkGameEnd();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
 }
 
 // 初期描画
