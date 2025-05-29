@@ -97,6 +97,19 @@ canvas {
   100% { transform: scale(1); filter: brightness(1); }
 }
 
+#backButton {
+  margin-top: 10px;
+  font-size: 16px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background: #444;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+
 #animatedBackground {
   position: fixed;
   top: 0;
