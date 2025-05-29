@@ -345,18 +345,20 @@ const canvas = document.getElementById('tetris');
       canHold = false;
     }
 
-    function playerDrop(){
-      player.pos.y++;
-      if(collide(arena, player)){
-        player.pos.y--;
-        merge(arena, player);
-        arenaSweep();
-        return; // playerResetはarenaSweepの後で適切に処理される
-      } else {
-        lockDelay = 0;
-      }
-      dropCounter = 0;
-    }
+	 function playerDrop(){
+	  player.pos.y++;
+	  if(collide(arena, player)){
+	    player.pos.y--;
+	    // スピン判定をmerge前に実行
+	    const spinType = checkSpin(arena, player);
+	    merge(arena, player);
+	    arenaSweep(spinType); // スピン情報を渡す
+	    return;
+	  } else {
+	    lockDelay = 0;
+	  }
+	  dropCounter = 0;
+	}
 
     function playerMove(dir){
       player.pos.x += dir;
