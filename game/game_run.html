@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>らんゲーム</title>
+  <link rel="stylesheet" href="../css/style_run.css">
+</head>
+
+<body>
+  <div id="animatedBackground">
+  </div>
+  <div class="game-container">
+    <h1>らんゲーム</h1>
+    <div class="instructions">操作:
+      <span class="key-hint">W/↑</span>ジャンプ
+      <span class="key-hint">A/D/←→</span>左右移動
+      <span class="key-hint">Space</span>射撃
+      <span class="key-hint">Shift</span>ダッシュ
+      <span class="key-hint">P</span>ポーズ</div>
+    <div class="game-info">
+      <div class="score">スコア:
+        <span id="score"></span>
+      </div>
+      <div class="lives">ライフ:
+        <span id="lives">3</span>
+      </div>
+      <div class="level">レベル:
+        <span id="level">1</span>
+      </div>
+      <div class="combo">コンボ:
+        <span id="combo"></span>
+      </div>
+      <div class="dash">ダッシュ:
+        <span id="dashCooldown">Ready</span>
+      </div>
+    </div>
+    <canvas id="gameCanvas" width="600" height="360">
+    </canvas>
+    <div class="controls">
+      <button class="btn" onclick="resetGame()">リスタート</button>
+      <button class="btn" onclick="togglePause()">ポーズ</button>
+      <button class="btn back-btn" onclick="history.back()">戻る</button>
+    </div>
+  </div>
+  <div class="game-over" id="gameOverScreen">
+    <div class="game-over-content">
+      <div id="gameOverTitle">ゲームオーバー</div>
+      <div style="margin: 20px 0; font-size: 16px;">最終スコア:
+        <span id="finalScore"></span>
+        <br>最大コンボ:
+        <span id="maxCombo"></span>
+      </div>
+      <button class="btn" onclick="resetGame()">もう一度</button>
+    </div>
+  </div>
+  <div class="pause-screen" id="pauseScreen">
+    <div>ポーズ中
+      <br>
+      <small style="font-size: 14px;">Pキーまたはポーズボタンで再開</small>
+    </div>
+  </div>
+  <div class="boss-warning" id="bossWarning">⚠️ BOSS APPROACHING ⚠️</div>
+  <script src="../script/script_run.js"></script>
+</body>
+
+</html>
