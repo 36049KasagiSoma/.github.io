@@ -13,6 +13,7 @@ let dy = 0;
 let snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }];
 let food = {};
 let directionQueue = [];
+let hasMovedThisTick = false;
 let score = 0;
 let gameRunning = true;
 
@@ -43,12 +44,7 @@ function drawGame() {
 function moveSnake() {
   if (!gameRunning) return;
 
-  // キューから1つだけ反映
-  if (directionQueue.length > 0) {
-    const newDir = directionQueue.shift();
-    dx = newDir.dx;
-    dy = newDir.dy;
-  }
+  hasMovedThisTick = false;
 
   const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
@@ -77,8 +73,9 @@ function moveSnake() {
 
 
 
+
 document.addEventListener("keydown", (e) => {
-  if (!gameRunning) return;
+  if (!gameRunning || hasMovedThisTick) return;
 
   const key = e.key.toLowerCase();
   if (["arrowleft", "arrowup", "arrowright", "arrowdown"].includes(key)) {
@@ -106,11 +103,11 @@ document.addEventListener("keydown", (e) => {
   }
 
   if (newDirection) {
-    const currentDirection = directionQueue.length > 0 ? directionQueue[0] : { dx, dy };
-
-    // 反対方向でなければキューに追加
-    if (!(newDirection.dx === -currentDirection.dx && newDirection.dy === -currentDirection.dy)) {
-      directionQueue.push(newDirection);
+    // 現在の方向と逆向きは無効
+    if (!(newDirection.dx === -dx && newDirection.dy === -dy)) {
+      dx = newDirection.dx;
+      dy = newDirection.dy;
+      hasMovedThisTick = true; // 方向変更はこのtick中は一度だけ
     }
   }
 });
