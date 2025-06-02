@@ -129,7 +129,9 @@ function restartGame() {
   gameOverText.style.display = "none";
   restartBtn.style.display = "none";
   generateFood();
+  hasMovedThisTick = false;
 }
+
 
 function gameLoop() {
   moveSnake();
