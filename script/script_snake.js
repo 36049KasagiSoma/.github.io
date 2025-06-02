@@ -50,27 +50,25 @@ function moveSnake() {
     return;
   }
 
-  // 自分自身との衝突判定（先頭以外と比較）
-  for (let i = 0; i < snake.length; i++) {
+  // 自分自身との衝突判定（※ 1つ目以降と比較）
+  for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       gameOver();
       return;
     }
   }
 
-  // 頭を追加
   snake.unshift(head);
 
-  // 食べ物との衝突判定
   if (head.x === food.x && head.y === food.y) {
     score += 10;
     scoreElement.textContent = `スコア: ${score}`;
     generateFood();
   } else {
-    // 食べてないなら尻尾を削除（移動）
     snake.pop();
   }
 }
+
 
 document.addEventListener("keydown", (e) => {
   if (!gameRunning) return;
