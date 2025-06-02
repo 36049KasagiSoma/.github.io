@@ -12,6 +12,7 @@ let dx = 1;
 let dy = 0;
 let snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }];
 let food = {};
+let directionQueue = [];
 let score = 0;
 let gameRunning = true;
 
@@ -42,15 +43,20 @@ function drawGame() {
 function moveSnake() {
   if (!gameRunning) return;
 
+  // キューから1つだけ反映
+  if (directionQueue.length > 0) {
+    const newDir = directionQueue.shift();
+    dx = newDir.dx;
+    dy = newDir.dy;
+  }
+
   const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
-  // 壁との衝突判定
   if (head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY) {
     gameOver();
     return;
   }
 
-  // 自分自身との衝突判定（※ 1つ目以降と比較）
   for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       gameOver();
@@ -70,6 +76,7 @@ function moveSnake() {
 }
 
 
+
 document.addEventListener("keydown", (e) => {
   if (!gameRunning) return;
 
@@ -78,23 +85,32 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 
+  let newDirection = null;
   switch (key) {
     case "arrowleft":
     case "a":
-      if (dx !== 1) { dx = -1; dy = 0; }
+      newDirection = { dx: -1, dy: 0 };
       break;
     case "arrowup":
     case "w":
-      if (dy !== 1) { dx = 0; dy = -1; }
+      newDirection = { dx: 0, dy: -1 };
       break;
     case "arrowright":
     case "d":
-      if (dx !== -1) { dx = 1; dy = 0; }
+      newDirection = { dx: 1, dy: 0 };
       break;
     case "arrowdown":
     case "s":
-      if (dy !== -1) { dx = 0; dy = 1; }
+      newDirection = { dx: 0, dy: 1 };
       break;
+  }
+
+  if (newDirection) {
+    const lastDirection = directionQueue.length > 0 ? directionQueue[directionQueue.length - 1] : { dx, dy };
+    // 逆方向は禁止
+    if (!(newDirection.dx === -lastDirection.dx && newDirection.dy === -lastDirection.dy)) {
+      directionQueue.push(newDirection);
+    }
   }
 });
 
