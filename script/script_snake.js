@@ -106,13 +106,15 @@ document.addEventListener("keydown", (e) => {
   }
 
   if (newDirection) {
-    const lastDirection = directionQueue.length > 0 ? directionQueue[directionQueue.length - 1] : { dx, dy };
-    // 逆方向は禁止
-    if (!(newDirection.dx === -lastDirection.dx && newDirection.dy === -lastDirection.dy)) {
+    const currentDirection = directionQueue.length > 0 ? directionQueue[0] : { dx, dy };
+
+    // 反対方向でなければキューに追加
+    if (!(newDirection.dx === -currentDirection.dx && newDirection.dy === -currentDirection.dy)) {
       directionQueue.push(newDirection);
     }
   }
 });
+
 
 function gameOver() {
   gameRunning = false;
