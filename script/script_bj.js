@@ -538,23 +538,7 @@ function nextHand() {
 }
 
 function restartGame() {
-  gameState = {
-    chips: 1000,
-    currentBet: 0,
-    deck: createDeck(),
-    playerHands: [
-      []
-    ],
-    dealerHand: [],
-    currentHand: 0,
-    gamePhase: 'betting',
-    splitHands: false,
-    insuranceBet: 0,
-    handBets: [0]
-  };
-
-  updateUI();
-  drawGame();
+  window.location.reload();
 }
 
 // ゲーム初期化
