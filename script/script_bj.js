@@ -1,7 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// ゲーム状態
 let gameState = {
   chips: 1000,
   currentBet: 0,
@@ -11,13 +10,12 @@ let gameState = {
   ],
   dealerHand: [],
   currentHand: 0,
-  gamePhase: 'betting', // betting, playing, dealer, gameOver
+  gamePhase: 'betting',
   splitHands: false,
   insuranceBet: 0,
   handBets: [0]
 };
 
-// カード作成
 function createDeck() {
   const suits = ['♠', '♣', '♦', '♥'];
   const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -72,17 +70,14 @@ function calculateHandValue(hand) {
   return value;
 }
 
-// ナチュラルブラックジャック判定（最初の2枚で21）
 function isNaturalBlackjack(hand) {
   return hand.length === 2 && calculateHandValue(hand) === 21;
 }
 
-// 通常のブラックジャック判定（21の値）
 function isBlackjack(hand) {
   return calculateHandValue(hand) === 21;
 }
 
-// ナチュラルブラックジャックかどうかを表示用に判定
 function hasNaturalBlackjack(hand) {
   if (hand.length !== 2) return false;
   
@@ -110,7 +105,6 @@ function drawCard(x, y, card, faceDown = false) {
   const cardWidth = 60;
   const cardHeight = 80;
 
-  // カード背景
   ctx.fillStyle = faceDown ? '#4169e1' : 'white';
   ctx.fillRect(x, y, cardWidth, cardHeight);
   ctx.strokeStyle = '#000';
@@ -135,7 +129,6 @@ function drawCard(x, y, card, faceDown = false) {
 function drawGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // ディーラーハンド
   ctx.fillStyle = 'white';
   ctx.font = '16px sans-serif';
   ctx.textAlign = 'left';
@@ -145,7 +138,6 @@ function drawGame() {
   if (gameState.gamePhase === 'dealer' || gameState.gamePhase === 'gameOver') {
     ctx.fillText(`(${dealerValue})`, 130, 40);
     
-    // ディーラーのナチュラルブラックジャック表示
     if (hasNaturalBlackjack(gameState.dealerHand)) {
       ctx.fillStyle = '#ffd700';
       ctx.fillText('ナチュラルBJ!', 200, 40);
@@ -157,9 +149,7 @@ function drawGame() {
     drawCard(50 + i * 70, 50, gameState.dealerHand[i], faceDown);
   }
 
-  // プレイヤーハンド
   if (gameState.splitHands) {
-    // スプリットハンド表示
     for (let handIndex = 0; handIndex < gameState.playerHands.length; handIndex++) {
       const hand = gameState.playerHands[handIndex];
       const x = 150 + handIndex * 250;
@@ -173,7 +163,6 @@ function drawGame() {
       const handValue = calculateHandValue(hand);
       ctx.fillText(`(${handValue})`, x + 80, y - 10);
 
-      // ナチュラルブラックジャック表示（スプリット後は不可）
       if (hasNaturalBlackjack(hand) && !gameState.splitHands) {
         ctx.fillStyle = '#ffd700';
         ctx.fillText('ナチュラルBJ!', x + 130, y - 10);
@@ -184,7 +173,6 @@ function drawGame() {
       }
     }
   } else {
-    // 通常ハンド表示
     ctx.fillStyle = 'white';
     ctx.font = '16px sans-serif';
     ctx.textAlign = 'left';
@@ -193,7 +181,6 @@ function drawGame() {
     const playerValue = calculateHandValue(gameState.playerHands[0]);
     ctx.fillText(`(${playerValue})`, 140, 240);
 
-    // プレイヤーのナチュラルブラックジャック表示
     if (hasNaturalBlackjack(gameState.playerHands[0])) {
       ctx.fillStyle = '#ffd700';
       ctx.fillText('ナチュラルBJ!', 220, 240);
@@ -244,17 +231,14 @@ function updateGameControls() {
   document.getElementById('hitBtn').disabled = currentHandValue >= 21;
   document.getElementById('standBtn').disabled = false;
 
-  // ダブルダウン（ナチュラルブラックジャックの場合は無効）
   const canDouble = currentHand.length === 2 &&
     gameState.chips >= gameState.handBets[gameState.currentHand] &&
     !hasNaturalBlackjack(currentHand);
   document.getElementById('doubleBtn').style.display = canDouble ? 'inline-block' : 'none';
 
-  // スプリット（ナチュラルブラックジャックの場合は無効）
   const canSplitHand = !gameState.splitHands && canSplit(currentHand) && !hasNaturalBlackjack(currentHand);
   document.getElementById('splitBtn').style.display = canSplitHand ? 'inline-block' : 'none';
 
-  // インシュアランス
   const dealerAce = gameState.dealerHand[0].rank === 'A';
   const canInsure = dealerAce && currentHand.length === 2 && gameState.insuranceBet === 0;
   document.getElementById('insuranceBtn').style.display = canInsure ? 'inline-block' : 'none';
@@ -271,7 +255,6 @@ function updateHandInfo() {
 
 function placeBet(amount) {
   if (amount === -1) {
-    // オールイン
     gameState.currentBet = gameState.chips;
   } else {
     if (gameState.chips >= amount) {
@@ -307,33 +290,15 @@ function deal() {
   gameState.insuranceBet = 0;
   gameState.gamePhase = 'playing';
 
-  // カード配布
   gameState.playerHands[0].push(gameState.deck.pop());
   gameState.dealerHand.push(gameState.deck.pop());
   gameState.playerHands[0].push(gameState.deck.pop());
   gameState.dealerHand.push(gameState.deck.pop());
 
-  // ナチュラルブラックジャックチェック
   const playerNatural = hasNaturalBlackjack(gameState.playerHands[0]);
-  const dealerNatural = hasNaturalBlackjack(gameState.dealerHand);
 
-  if (playerNatural && dealerNatural) {
-    // 両方ナチュラルブラックジャック = プッシュ（引き分け）
-    endGame('プッシュ（両方ナチュラルブラックジャック）', 'push');
-    return;
-  } else if (playerNatural) {
-    // プレイヤーのみナチュラルブラックジャック = 3:2ペイアウト
-    endGame('ナチュラルブラックジャック！', 'naturalBlackjack');
-    return;
-  } else if (dealerNatural) {
-    // ディーラーのみナチュラルブラックジャック = プレイヤー負け
-    // インシュアランスの処理
-    if (gameState.insuranceBet > 0) {
-      gameState.chips += gameState.insuranceBet * 2;
-      endGame('ディーラーナチュラルブラックジャック（インシュアランス勝利）', 'insuranceWin');
-    } else {
-      endGame('ディーラーナチュラルブラックジャック', 'dealerNatural');
-    }
+  if (playerNatural) {
+    checkAllHandsComplete();
     return;
   }
 
@@ -344,7 +309,6 @@ function deal() {
 function hit() {
   const currentHand = gameState.playerHands[gameState.currentHand];
   
-  // ナチュラルブラックジャックの場合はヒット不可
   if (hasNaturalBlackjack(currentHand)) {
     return;
   }
@@ -353,7 +317,6 @@ function hit() {
 
   const handValue = calculateHandValue(currentHand);
   if (handValue > 21) {
-    // バスト
     if (gameState.splitHands && gameState.currentHand < gameState.playerHands.length - 1) {
       gameState.currentHand++;
     } else {
@@ -378,7 +341,6 @@ function stand() {
 function doubleDown() {
   const currentHand = gameState.playerHands[gameState.currentHand];
   
-  // ナチュラルブラックジャックの場合はダブルダウン不可
   if (hasNaturalBlackjack(currentHand)) {
     return;
   }
@@ -398,7 +360,6 @@ function doubleDown() {
 function split() {
   const currentHand = gameState.playerHands[0];
   
-  // ナチュラルブラックジャックの場合はスプリット不可
   if (hasNaturalBlackjack(currentHand)) {
     return;
   }
@@ -407,11 +368,9 @@ function split() {
     gameState.chips -= gameState.currentBet;
     gameState.splitHands = true;
 
-    // 2つ目のハンドを作成
     gameState.playerHands.push([currentHand.pop()]);
     gameState.handBets.push(gameState.currentBet);
 
-    // 各ハンドにカードを1枚ずつ追加
     gameState.playerHands[0].push(gameState.deck.pop());
     gameState.playerHands[1].push(gameState.deck.pop());
 
@@ -459,7 +418,6 @@ function determineWinner() {
   let totalWinnings = 0;
   let resultText = '';
 
-  // インシュアランスの処理
   if (gameState.insuranceBet > 0) {
     if (dealerNatural) {
       totalWinnings += gameState.insuranceBet * 2;
@@ -477,7 +435,6 @@ function determineWinner() {
       resultText += `ハンド${i + 1}: バスト `;
     } else if (dealerValue > 21) {
       if (playerNatural) {
-        // ナチュラルブラックジャック（3:2ペイアウト）
         totalWinnings += Math.floor(handBet * 2.5);
         resultText += `ハンド${i + 1}: ナチュラルBJ勝利！ `;
       } else {
@@ -486,7 +443,6 @@ function determineWinner() {
       }
     } else if (handValue > dealerValue) {
       if (playerNatural) {
-        // ナチュラルブラックジャック（3:2ペイアウト）
         totalWinnings += Math.floor(handBet * 2.5);
         resultText += `ハンド${i + 1}: ナチュラルBJ勝利！ `;
       } else {
@@ -494,10 +450,24 @@ function determineWinner() {
         resultText += `ハンド${i + 1}: 勝利 `;
       }
     } else if (handValue === dealerValue) {
-      totalWinnings += handBet;
-      resultText += `ハンド${i + 1}: プッシュ `;
+      if (playerNatural && dealerNatural) {
+        totalWinnings += handBet;
+        resultText += `ハンド${i + 1}: プッシュ（両方BJ） `;
+      } else if (playerNatural && !dealerNatural) {
+        totalWinnings += Math.floor(handBet * 2.5);
+        resultText += `ハンド${i + 1}: ナチュラルBJ勝利！ `;
+      } else if (!playerNatural && dealerNatural) {
+        resultText += `ハンド${i + 1}: 負け（ディーラーBJ） `;
+      } else {
+        totalWinnings += handBet;
+        resultText += `ハンド${i + 1}: プッシュ `;
+      }
     } else {
-      resultText += `ハンド${i + 1}: 負け `;
+      if (dealerNatural && !playerNatural) {
+        resultText += `ハンド${i + 1}: 負け（ディーラーBJ） `;
+      } else {
+        resultText += `ハンド${i + 1}: 負け `;
+      }
     }
   }
 
@@ -509,15 +479,11 @@ function endGame(message, winType) {
   gameState.gamePhase = 'gameOver';
 
   if (winType === 'naturalBlackjack') {
-    // ナチュラルブラックジャック（3:2ペイアウト）
     gameState.chips += Math.floor(gameState.currentBet * 2.5);
   } else if (winType === 'push') {
-    // プッシュ（ベット額を戻す）
     gameState.chips += gameState.currentBet;
   } else if (winType === 'insuranceWin') {
-    // インシュアランス勝利の場合は既に処理済み
   }
-  // dealerNaturalの場合は何もしない（ベット額は既に差し引かれている）
 
   const gameResult = document.getElementById('gameResult');
   if (gameState.chips <= 0) {
@@ -541,7 +507,6 @@ function restartGame() {
   window.location.reload();
 }
 
-// ゲーム初期化
 gameState.deck = createDeck();
 updateUI();
 drawGame();
