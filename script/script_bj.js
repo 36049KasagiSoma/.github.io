@@ -5,15 +5,14 @@ let gameState = {
   chips: 1000,
   currentBet: 0,
   deck: [],
-  playerHands: [
-    []
-  ],
+  playerHands: [[]],
   dealerHand: [],
   currentHand: 0,
   gamePhase: 'betting',
   splitHands: false,
   insuranceBet: 0,
-  handBets: [0]
+  handBets: [0],
+  surrendered: false
 };
 
 function createDeck() {
@@ -152,7 +151,7 @@ function drawGame() {
   if (gameState.splitHands) {
     for (let handIndex = 0; handIndex < gameState.playerHands.length; handIndex++) {
       const hand = gameState.playerHands[handIndex];
-      const x = 150 + handIndex * 250;
+      const x = 50 + handIndex * 300;
       const y = 250;
 
       ctx.fillStyle = handIndex === gameState.currentHand ? '#ffd700' : 'white';
@@ -242,6 +241,9 @@ function updateGameControls() {
   const dealerAce = gameState.dealerHand[0].rank === 'A';
   const canInsure = dealerAce && currentHand.length === 2 && gameState.insuranceBet === 0;
   document.getElementById('insuranceBtn').style.display = canInsure ? 'inline-block' : 'none';
+
+  const canSurrender = currentHand.length === 2 && !gameState.splitHands && !hasNaturalBlackjack(currentHand);
+  document.getElementById('surrenderBtn').style.display = canSurrender ? 'inline-block' : 'none';
 }
 
 function updateHandInfo() {
@@ -288,6 +290,7 @@ function deal() {
   gameState.currentHand = 0;
   gameState.splitHands = false;
   gameState.insuranceBet = 0;
+  gameState.surrendered = false;
   gameState.gamePhase = 'playing';
 
   gameState.playerHands[0].push(gameState.deck.pop());
@@ -335,6 +338,15 @@ function stand() {
     drawGame();
   } else {
     checkAllHandsComplete();
+  }
+}
+
+function surrender() {
+  if (gameState.playerHands[0].length === 2 && !gameState.splitHands) {
+    gameState.surrendered = true;
+    const refund = Math.floor(gameState.handBets[0] / 2);
+    gameState.chips += refund;
+    endGame(`サレンダー - ベットの半分（${refund}チップ）が返却されました`, 'surrender');
   }
 }
 
