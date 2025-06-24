@@ -151,24 +151,33 @@ function drawGame() {
   if (gameState.splitHands) {
     for (let handIndex = 0; handIndex < gameState.playerHands.length; handIndex++) {
       const hand = gameState.playerHands[handIndex];
-      const x = 50 + handIndex * 300;
+      
+      // 各手札の基本位置を計算（画面を左右に分割）
+      const baseX = handIndex === 0 ? 50 : 380; // 左側: 50, 右側: 380
       const y = 250;
-
+      
+      // カードの重なり幅を手札の長さに応じて調整
+      const maxCards = 5; // 想定最大枚数
+      const availableWidth = 260; // 各手札に使える幅
+      const cardWidth = 60;
+      const maxOverlap = availableWidth - cardWidth; // 最大重なり可能幅
+      const cardSpacing = hand.length > 1 ? Math.min(70, maxOverlap / (hand.length - 1)) : 70;
+  
       ctx.fillStyle = handIndex === gameState.currentHand ? '#ffd700' : 'white';
       ctx.font = '16px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText(`ハンド${handIndex + 1}`, x, y - 10);
-
+      ctx.fillText(`ハンド${handIndex + 1}`, baseX, y - 10);
+  
       const handValue = calculateHandValue(hand);
-      ctx.fillText(`(${handValue})`, x + 80, y - 10);
-
+      ctx.fillText(`(${handValue})`, baseX + 80, y - 10);
+  
       if (hasNaturalBlackjack(hand) && !gameState.splitHands) {
         ctx.fillStyle = '#ffd700';
-        ctx.fillText('ナチュラルBJ!', x + 130, y - 10);
+        ctx.fillText('ナチュラルBJ!', baseX + 130, y - 10);
       }
-
+  
       for (let i = 0; i < hand.length; i++) {
-        drawCard(x + i * 70, y, hand[i]);
+        drawCard(baseX + i * cardSpacing, y, hand[i]);
       }
     }
   } else {
