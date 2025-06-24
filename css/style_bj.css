@@ -1,0 +1,95 @@
+canvas {
+  background: #0f5132;
+  display: block;
+  margin: 0 auto;
+  border: 2px solid #fff;
+  border-radius: 10px;
+}
+
+body {
+  background-color: #000;
+  color: white;
+  text-align: center;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 10px;
+}
+
+.info {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+button {
+  margin: 3px;
+  padding: 8px 15px;
+  font-size: 14px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+button:hover[style*="background-color: #dc3545"] {
+  background-color: #c82333 !important;
+}
+
+button:hover[style*="background-color: #ffc107"] {
+  background-color: #e0a800 !important;
+}
+
+button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.game-over {
+  color: #ff6347;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.win {
+  color: #32cd32;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.controls {
+  margin: 10px 0;
+}
+
+.hand-info {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.split-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin: 10px 0;
+}
+
+.split-hand {
+  text-align: center;
+}
+
+.active-hand {
+  color: #ffd700;
+  font-weight: bold;
+}

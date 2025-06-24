@@ -1,0 +1,208 @@
+canvas {
+  background: #0f5132;
+  display: block;
+  margin: 0 auto;
+  border: 2px solid #fff;
+  border-radius: 10px;
+}
+
+body {
+  background-color: #000;
+  color: white;
+  text-align: center;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 10px;
+}
+
+.info {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+button {
+  margin: 3px;
+  padding: 8px 15px;
+  font-size: 14px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+button:hover[style*="background-color: #dc3545"] {
+  background-color: #c82333 !important;
+}
+
+button:hover[style*="background-color: #ffc107"] {
+  background-color: #e0a800 !important;
+}
+
+button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.game-over {
+  color: #ff6347;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.win {
+  color: #32cd32;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.controls {
+  margin: 10px 0;
+}
+
+.hand-info {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.payout-table {
+  background-color: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 10px;
+  margin: 20px auto;
+  padding: 15px;
+  max-width: 400px;
+}
+
+.payout-table h3 {
+  color: #ffd700;
+  margin-top: 0;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.payout-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #333;
+}
+
+.payout-row:last-child {
+  border-bottom: none;
+}
+
+.payout-hand {
+  text-align: left;
+}
+
+.payout-multiplier {
+  color: #32cd32;
+  font-weight: bold;
+}
+
+.selected-card {
+  background-color: rgba(255, 215, 0, 0.3) !important;
+  border: 3px solid #ffd700 !important;
+}
+
+.card-selection {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.double-up-container {
+  background-color: #1a1a1a;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 500px;
+}
+
+.double-up-title {
+  color: #ffd700;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.double-up-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+.double-card {
+  width: 80px;
+  height: 110px;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.double-card:hover {
+  border-color: #ffd700;
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+.dealer-card {
+  background-color: #fff;
+  color: #000;
+}
+
+.hidden-card {
+  background-color: #4169e1;
+  color: #fff;
+}
+
+.double-result {
+  margin: 15px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.double-choice-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.choice-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px solid #ffd700;
+  background-color: transparent;
+  color: #ffd700;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+
+.choice-button:hover {
+  background-color: #ffd700;
+  color: #000;
+}
