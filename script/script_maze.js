@@ -36,6 +36,8 @@ let fixedCellSize = 20; // ビューポートモード時の固定セルサイ�
 let keysPressed = new Set();
 let lastMoveTime = 0;
 const MOVE_COOLDOWN = 150; // ミリ秒単位でのクールタイム
+let lastPressedKey = null;
+
 
 // 難易度設定
 const difficulties = {
@@ -879,6 +881,9 @@ function handleMovement(key) {
   
   lastMoveTime = currentTime;
   
+  // 最後に押されたキーを記録
+  lastPressedKey = key;
+  
   switch (key) {
     case 'arrowup':
     case 'w':
@@ -898,10 +903,10 @@ function handleMovement(key) {
       break;
   }
   
-  // キーが押され続けている場合は継続して移動
-  if (keysPressed.has(key)) {
+  // 継続移動は最後に押されたキーのみ
+  if (keysPressed.has(key) && lastPressedKey === key) {
     setTimeout(() => {
-      if (keysPressed.has(key)) {
+      if (keysPressed.has(key) && lastPressedKey === key) {
         handleMovement(key);
       }
     }, MOVE_COOLDOWN);
@@ -943,8 +948,11 @@ document.addEventListener('keydown', (e) => {
   if (moveKeys.includes(key)) {
     e.preventDefault(); // デフォルトのスクロール動作を防ぐ
     
-    if (!keysPressed.has(key)) {
-      keysPressed.add(key);
+    const wasPressed = keysPressed.has(key);
+    keysPressed.add(key);
+    
+    // 新しいキーが押された場合、または既存キーの再押下の場合
+    if (!wasPressed) {
       handleMovement(key);
     }
   }
