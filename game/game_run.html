@@ -4,20 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex" />
+  <meta name="robots" content="noindex">
   <title>らんゲーム</title>
   <link rel="stylesheet" href="../css/style_run.css">
 </head>
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHYJ8XQSZ8"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-KHYJ8XQSZ8');
+  window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+  
+      gtag('config', 'G-KHYJ8XQSZ8');
 </script>
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
+
 <body>
   <div id="animatedBackground">
   </div>
@@ -31,7 +32,8 @@
       <span class="key-hint">P</span>ポーズ</div>
     <div class="game-info">
       <div class="score">スコア:
-        <span id="score"></span>
+        <span id="score">
+        </span>
       </div>
       <div class="lives">ライフ:
         <span id="lives">3</span>
@@ -40,7 +42,8 @@
         <span id="level">1</span>
       </div>
       <div class="combo">コンボ:
-        <span id="combo"></span>
+        <span id="combo">
+        </span>
       </div>
       <div class="dash">ダッシュ:
         <span id="dashCooldown">Ready</span>
@@ -58,9 +61,11 @@
     <div class="game-over-content">
       <div id="gameOverTitle">ゲームオーバー</div>
       <div style="margin: 20px 0; font-size: 16px;">最終スコア:
-        <span id="finalScore"></span>
+        <span id="finalScore">
+        </span>
         <br>最大コンボ:
-        <span id="maxCombo"></span>
+        <span id="maxCombo">
+        </span>
       </div>
       <button class="btn" onclick="resetGame()">もう一度</button>
     </div>
