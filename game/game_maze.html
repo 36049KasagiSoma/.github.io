@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
+  <title>どうくつゲーム</title>
+  <link rel="stylesheet" href="../css/style_maze.css">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KHYJ8XQSZ8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+  
+      gtag('config', 'G-KHYJ8XQSZ8');
+</script>
+<!-- Google tag (gtag.js) -->
+
+<body>
+  <h1>どうくつゲーム</h1>
+  <div class="canvas-container">
+    <canvas id="gameCanvas" width="600" height="400">
+    </canvas>
+  </div>
+  <div class="stats">
+    <div>時間:
+      <span id="timer">0:00</span>/
+      <span id="timeLimit">5:00</span>
+    </div>
+    <div>コイン:
+      <span id="coins"></span>/
+      <span id="totalCoins"></span>
+    </div>
+    <div>移動回数:
+      <span id="moves"></span>
+    </div>
+    <div>最短距離:
+      <span id="distance">-</span>
+    </div>
+  </div>
+  <div id="zoomControls">
+    <button onclick="adjustZoom(-1)">縮小</button>
+    <span>ズーム:
+      <span id="zoomLevel">100%</span>
+    </span>
+    <button onclick="adjustZoom(1)">拡大</button>
+    <button onclick="resetZoom()">リセット</button>
+  </div>
+  <div class="viewport-controls">
+    <div class="option">
+      <input type="checkbox" id="viewportMode" onchange="toggleViewportMode()">
+      <label for="viewportMode">ビューポートモード</label>
+    </div>
+    <div class="difficulty">
+      <label for="viewportSize">表示範囲:</label>
+      <select id="viewportSize" onchange="updateViewportSize()">
+        <option value="15">小 (15x15)</option>
+        <option value="21" selected>中 (21x21)</option>
+        <option value="31">大 (31x31)</option>
+        <option value="41">特大 (41x41)</option>
+      </select>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="difficulty">
+      <label for="difficultySelect">難易度:</label>
+      <select id="difficultySelect" onchange="updateDifficulty()">
+        <option value="beginner">初心者 (11x7)</option>
+        <option value="easy">初歩 (15x10)</option>
+        <option value="normal" selected>標準 (25x15)</option>
+        <option value="hard">上級 (35x20)</option>
+        <option value="expert">熟練 (45x25)</option>
+        <option value="master">名人 (55x30)</option>
+        <option value="nightmare">ナイトメア (65x35)</option>
+        <option value="insane">狂気 (75x40)</option>
+        <option value="legendary">伝説 (85x45)</option>
+        <option value="godlike">神格 (95x50)</option>
+        <option value="impossible">不可能 (105x55)</option>
+        <option value="unbeatable">無敵 (120x60)</option>
+        <option value="mythic">神話 (140x70)</option>
+        <option value="transcendent">超越 (160x80)</option>
+        <option value="deathwish">死の願い (180x95)</option>
+        <option value="devonly">開発者限定 (200x120)</option>
+      </select>
+    </div>
+    <button onclick="generateMaze()">新しい迷路</button>
+    <button onclick="showSolution()" id="hintBtn">ヒント表示</button>
+    <button onclick="resetGame()">リセット</button>
+  </div>
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-color" style="background: #0080ff;">
+      </div>
+      <span>プレイヤー</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #ff0000;">
+      </div>
+      <span>ゴール</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #ffd700;">
+      </div>
+      <span>コイン</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #ff69b4;">
+      </div>
+      <span>パワーアップ</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #00ffff;">
+      </div>
+      <span>見通しの水晶</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #9370db;">
+      </div>
+      <span>視界拡張</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #00ff00;">
+      </div>
+      <span>最短経路</span>
+    </div>
+  </div>
+  <div class="info">← ↑ ↓ → または W A S D キーで移動
+    <br>全てのコインを集めてゴールを目指そう！
+    <br>パワーアップ（ピンク）で壁を1回通り抜けられます
+    <br>見通しの水晶（水色）で5秒間全体が見えます
+    <br>視界拡張（紫）で視界範囲が永続的に広がります</div>
+  <div id="gameOverText" class="game-over" style="display: none;">時間切れ！</div>
+  <div id="gameClearText" class="game-clear" style="display: none;">クリア！</div>
+  <button id="restartBtn" onclick="resetGame()" style="display: none;">もう一度プレイ</button>
+  <button onclick="location.href='../index.html'">戻る</button>
+  <script src="../script/script_maze.js"></script>
+</body>
+
+</html>
