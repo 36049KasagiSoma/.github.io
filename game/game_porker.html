@@ -1,147 +1,158 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="robots" content="noindex" />
-    <title>ぽーかあゲーム</title>
-    <link rel="stylesheet" href="../css/style_porker.css">
-  </head>
-    <!-- Google tag (gtag.js) -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
+  <title>ぽーかあゲーム</title>
+  <link rel="stylesheet" href="../css/style_porker.css">
+</head>
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHYJ8XQSZ8"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-KHYJ8XQSZ8');
+  window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+  
+      gtag('config', 'G-KHYJ8XQSZ8');
 </script>
-  <!-- Google tag (gtag.js) -->
-  <body>
-    <h1>ぽーかあゲーム</h1>
-    <canvas id="gameCanvas" width="700" height="200"></canvas>
-    <div class="game-info">
-      <div>チップ: 
-        <span id="chips">1000</span>
-      </div>
-      <div>ベット: 
-        <span id="bet">0</span>
-      </div>
-      <div>デッキ残り: 
-        <span id="deckCount">52</span>
-      </div>
+<!-- Google tag (gtag.js) -->
+
+<body>
+  <h1>ぽーかあゲーム</h1>
+  <canvas id="gameCanvas" width="700" height="200">
+  </canvas>
+  <div class="game-info">
+    <div>チップ:
+      <span id="chips">1000</span>
     </div>
-    <div id="handInfo" class="hand-info"></div>
-    <div class="controls">
-      <div id="bettingControls">
-        <button onclick="placeBet(10)">10ベット</button>
-        <button onclick="placeBet(50)">50ベット</button>
-        <button onclick="placeBet(100)">100ベット</button>
-        <button onclick="placeBet(-1)">オールイン</button>
-        <button onclick="resetBet()" style="background-color: #ffc107; color: #000;">ベットリセット</button>
-        <button onclick="deal()" id="dealBtn">ディール</button>
-      </div>
-      <div id="gameControls" style="display: none;">
-        <div class="card-selection" id="cardSelection">ホールドするカードをクリックして選択してください </div>
-        <button onclick="drawCards()" id="drawBtn">選択したカードをホールド</button>
-      </div>
+    <div>ベット:
+      <span id="bet"></span>
     </div>
-    <div id="gameResult" style="display: none;"></div>
-    <div id="doubleUpContainer" class="double-up-container" style="display: none;">
-      <div class="double-up-title">ダブルアップチャレンジ！</div>
-      <div>獲得配当: 
-        <span id="winAmount">0</span>チップ
-      </div>
-      <div id="doubleUpPhase1">
-        <div>次のカードが現在のカードより上か下かを予想してください</div>
-        <div class="double-up-cards">
-          <div class="double-card dealer-card" id="currentCard">
-            <div style="font-size: 10px;">現在のカード</div>
-            <div id="currentCardRank" style="font-size: 16px; margin: 5px 0;"></div>
-            <div id="currentCardSuit" style="font-size: 24px;"></div>
+    <div>デッキ残り:
+      <span id="deckCount">52</span>
+    </div>
+  </div>
+  <div id="handInfo" class="hand-info">
+  </div>
+  <div class="controls">
+    <div id="bettingControls">
+      <button onclick="placeBet(10)">10ベット</button>
+      <button onclick="placeBet(50)">50ベット</button>
+      <button onclick="placeBet(100)">100ベット</button>
+      <button onclick="placeBet(-1)">オールイン</button>
+      <button onclick="resetBet()" style="background-color: #ffc107; color: #000;">ベットリセット</button>
+      <button onclick="deal()" id="dealBtn">ディール</button>
+    </div>
+    <div id="gameControls" style="display: none;">
+      <div class="card-selection" id="cardSelection">ホールドするカードをクリックして選択してください</div>
+      <button onclick="drawCards()" id="drawBtn">選択したカードをホールド</button>
+    </div>
+  </div>
+  <div id="gameResult" style="display: none;">
+  </div>
+  <div id="doubleUpContainer" class="double-up-container" style="display: none;">
+    <div class="double-up-title">ダブルアップチャレンジ！</div>
+    <div>獲得配当:
+      <span id="winAmount"></span>チップ</div>
+    <div id="doubleUpPhase1">
+      <div>次のカードが現在のカードより上か下かを予想してください</div>
+      <div class="double-up-cards">
+        <div class="double-card dealer-card" id="currentCard">
+          <div style="font-size: 10px;">現在のカード</div>
+          <div id="currentCardRank" style="font-size: 16px; margin: 5px 0;">
+          </div>
+          <div id="currentCardSuit" style="font-size: 24px;">
           </div>
         </div>
-        <div class="double-choice-buttons">
-          <button class="choice-button" onclick="makeDoubleUpChoice('higher')">上 (Higher)</button>
-          <button class="choice-button" onclick="makeDoubleUpChoice('lower')">下 (Lower)</button>
-        </div>
       </div>
-      <div id="doubleUpPhase2" style="display: none;">
-        <div>結果</div>
-        <div class="double-up-cards">
-          <div class="double-card dealer-card" id="oldCard">
-            <div style="font-size: 14px;">前のカード</div>
-            <div id="oldCardRank" style="font-size: 16px; margin: 5px 0;"></div>
-            <div id="oldCardSuit" style="font-size: 24px;"></div>
+      <div class="double-choice-buttons">
+        <button class="choice-button" onclick="makeDoubleUpChoice('higher')">上 (Higher)</button>
+        <button class="choice-button" onclick="makeDoubleUpChoice('lower')">下 (Lower)</button>
+      </div>
+    </div>
+    <div id="doubleUpPhase2" style="display: none;">
+      <div>結果</div>
+      <div class="double-up-cards">
+        <div class="double-card dealer-card" id="oldCard">
+          <div style="font-size: 14px;">前のカード</div>
+          <div id="oldCardRank" style="font-size: 16px; margin: 5px 0;">
           </div>
-          <div class="double-card dealer-card" id="newCard">
-            <div style="font-size: 14px;">新しいカード</div>
-            <div id="newCardRank" style="font-size: 16px; margin: 5px 0;"></div>
-            <div id="newCardSuit" style="font-size: 24px;"></div>
+          <div id="oldCardSuit" style="font-size: 24px;">
           </div>
         </div>
-        <div id="doubleResult" class="double-result"></div>
+        <div class="double-card dealer-card" id="newCard">
+          <div style="font-size: 14px;">新しいカード</div>
+          <div id="newCardRank" style="font-size: 16px; margin: 5px 0;">
+          </div>
+          <div id="newCardSuit" style="font-size: 24px;">
+          </div>
+        </div>
       </div>
-      <div id="doubleControls">
-        <button onclick="startDoubleUp()" id="startDoubleBtn">ダブルアップに挑戦</button>
-        <button onclick="collectWinnings()" style="background-color: #ffc107; color: #000;">配当を受け取る</button>
-      </div>
-      <div id="doubleNextControls" style="display: none;">
-        <button onclick="continueDoubleUp()">もう一度ダブルアップ</button>
-        <button onclick="collectWinnings()" style="background-color: #ffc107; color: #000;">配当を受け取る</button>
-      </div>
-    </div>
-    <div id="nextHandBtn" style="display: none;">
-      <button onclick="nextHand()">次のハンド</button>
-    </div>
-    <div class="payout-table">
-      <h3>役と倍率</h3>
-      <div class="payout-row">
-        <div class="payout-hand">ロイヤルストレートフラッシュ</div>
-        <div class="payout-multiplier">×500</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">ストレートフラッシュ</div>
-        <div class="payout-multiplier">×100</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">フォーカード</div>
-        <div class="payout-multiplier">×50</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">フルハウス</div>
-        <div class="payout-multiplier">×15</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">フラッシュ</div>
-        <div class="payout-multiplier">×10</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">ストレート</div>
-        <div class="payout-multiplier">×8</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">スリーカード</div>
-        <div class="payout-multiplier">×5</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">ツーペア</div>
-        <div class="payout-multiplier">×3</div>
-      </div>
-      <div class="payout-row">
-        <div class="payout-hand">ワンペア（J以上）</div>
-        <div class="payout-multiplier">×2</div>
+      <div id="doubleResult" class="double-result">
       </div>
     </div>
-    <div class="info">ポーカーの基本ルール：
-      <br>• 5枚のカードで最高の役を作ろう！
-      <br>• 最初に5枚配られ、ホールドしたいカードを選択
-      <br>• ワンペアはJ（ジャック）以上で配当あり
-      <br>• 配当がある場合、ダブルアップで2倍に挑戦可能！ 
+    <div id="doubleControls">
+      <button onclick="startDoubleUp()" id="startDoubleBtn">ダブルアップに挑戦</button>
+      <button onclick="collectWinnings()" style="background-color: #ffc107; color: #000;">配当を受け取る</button>
     </div>
-    <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 15px;">
-      <button onclick="restartGame()" style="background-color: #dc3545;">新しいゲーム</button>
-      <button onclick="location.href='../index.html'">戻る</button>
+    <div id="doubleNextControls" style="display: none;">
+      <button onclick="continueDoubleUp()">もう一度ダブルアップ</button>
+      <button onclick="collectWinnings()" style="background-color: #ffc107; color: #000;">配当を受け取る</button>
     </div>
-    <script src="../script/script_porker.js"></script>
-  </body>
+  </div>
+  <div id="nextHandBtn" style="display: none;">
+    <button onclick="nextHand()">次のハンド</button>
+  </div>
+  <div class="payout-table">
+    <h3>役と倍率</h3>
+    <div class="payout-row">
+      <div class="payout-hand">ロイヤルストレートフラッシュ</div>
+      <div class="payout-multiplier">×500</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">ストレートフラッシュ</div>
+      <div class="payout-multiplier">×100</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">フォーカード</div>
+      <div class="payout-multiplier">×50</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">フルハウス</div>
+      <div class="payout-multiplier">×15</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">フラッシュ</div>
+      <div class="payout-multiplier">×10</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">ストレート</div>
+      <div class="payout-multiplier">×8</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">スリーカード</div>
+      <div class="payout-multiplier">×5</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">ツーペア</div>
+      <div class="payout-multiplier">×3</div>
+    </div>
+    <div class="payout-row">
+      <div class="payout-hand">ワンペア（J以上）</div>
+      <div class="payout-multiplier">×2</div>
+    </div>
+  </div>
+  <div class="info">ポーカーの基本ルール：
+    <br>• 5枚のカードで最高の役を作ろう！
+    <br>• 最初に5枚配られ、ホールドしたいカードを選択
+    <br>• ワンペアはJ（ジャック）以上で配当あり
+    <br>• 配当がある場合、ダブルアップで2倍に挑戦可能！</div>
+  <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 15px;">
+    <button onclick="restartGame()" style="background-color: #dc3545;">新しいゲーム</button>
+    <button onclick="location.href='../index.html'">戻る</button>
+  </div>
+  <script src="../script/script_porker.js"></script>
+</body>
+
 </html>
