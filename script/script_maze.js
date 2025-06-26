@@ -37,6 +37,7 @@ let keysPressed = new Set();
 let lastMoveTime = 0;
 const MOVE_COOLDOWN = 150; // ミリ秒単位でのクールタイム
 let lastPressedKey = null;
+let continuousMovementTimer = null;
 
 
 // 難易度設定
@@ -881,9 +882,6 @@ function handleMovement(key) {
   
   lastMoveTime = currentTime;
   
-  // 最後に押されたキーを記録
-  lastPressedKey = key;
-  
   switch (key) {
     case 'arrowup':
     case 'w':
@@ -902,15 +900,19 @@ function handleMovement(key) {
       movePlayer(1, 0);
       break;
   }
-  
-  // 継続移動は最後に押されたキーのみ
-  if (keysPressed.has(key) && lastPressedKey === key) {
-    setTimeout(() => {
-      if (keysPressed.has(key) && lastPressedKey === key) {
-        handleMovement(key);
-      }
-    }, MOVE_COOLDOWN);
+}
+
+function startContinuousMovement() {
+  if (continuousMovementTimer) {
+    clearTimeout(continuousMovementTimer);
   }
+  
+  continuousMovementTimer = setTimeout(() => {
+    if (keysPressed.size > 0 && lastPressedKey && keysPressed.has(lastPressedKey)) {
+      handleMovement(lastPressedKey);
+      startContinuousMovement(); // 再帰的に継続
+    }
+  }, MOVE_COOLDOWN);
 }
 
 // ゲームオーバー
@@ -948,12 +950,12 @@ document.addEventListener('keydown', (e) => {
   if (moveKeys.includes(key)) {
     e.preventDefault(); // デフォルトのスクロール動作を防ぐ
     
-    const wasPressed = keysPressed.has(key);
-    keysPressed.add(key);
-    
-    // 新しいキーが押された場合、または既存キーの再押下の場合
-    if (!wasPressed) {
+    // 新しいキーが押された場合のみ処理
+    if (!keysPressed.has(key)) {
+      keysPressed.add(key);
+      lastPressedKey = key; // 最後に押されたキーを更新
       handleMovement(key);
+      startContinuousMovement(); // 継続移動開始
     }
   }
 });
@@ -961,6 +963,21 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
   const key = e.key.toLowerCase();
   keysPressed.delete(key);
+  
+  // 離されたキーが最後に押されたキーの場合、次のキーに切り替え
+  if (key === lastPressedKey) {
+    if (keysPressed.size > 0) {
+      // 残っているキーの中から最新のものを選択
+      const remainingKeys = Array.from(keysPressed);
+      lastPressedKey = remainingKeys[remainingKeys.length - 1];
+    } else {
+      lastPressedKey = null;
+      if (continuousMovementTimer) {
+        clearTimeout(continuousMovementTimer);
+        continuousMovementTimer = null;
+      }
+    }
+  }
 });
 
 // 初期化
