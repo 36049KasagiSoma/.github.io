@@ -33,6 +33,9 @@ let viewportSize = 21; // 表示するセル数（奇数）
 let viewportX = 0; // ビューポートの中心X座標
 let viewportY = 0; // ビューポートの中心Y座標
 let fixedCellSize = 20; // ビューポートモード時の固定セルサイズ
+let keysPressed = new Set();
+let lastMoveTime = 0;
+const MOVE_COOLDOWN = 150; // ミリ秒単位でのクールタイム
 
 // 難易度設定
 const difficulties = {
@@ -866,6 +869,45 @@ function showSolution() {
   draw();
 }
 
+//移動処理
+function handleMovement(key) {
+  const currentTime = Date.now();
+  
+  if (currentTime - lastMoveTime < MOVE_COOLDOWN) {
+    return;
+  }
+  
+  lastMoveTime = currentTime;
+  
+  switch (key) {
+    case 'arrowup':
+    case 'w':
+      movePlayer(0, -1);
+      break;
+    case 'arrowdown':
+    case 's':
+      movePlayer(0, 1);
+      break;
+    case 'arrowleft':
+    case 'a':
+      movePlayer(-1, 0);
+      break;
+    case 'arrowright':
+    case 'd':
+      movePlayer(1, 0);
+      break;
+  }
+  
+  // キーが押され続けている場合は継続して移動
+  if (keysPressed.has(key)) {
+    setTimeout(() => {
+      if (keysPressed.has(key)) {
+        handleMovement(key);
+      }
+    }, MOVE_COOLDOWN);
+  }
+}
+
 // ゲームオーバー
 function gameOver() {
   isGameActive = false;
@@ -895,28 +937,22 @@ function resetGame() {
 
 // キーボード操作
 document.addEventListener('keydown', (e) => {
-  switch (e.key) {
-    case 'ArrowUp':
-    case 'w':
-    case 'W':
-      movePlayer(0, -1);
-      break;
-    case 'ArrowDown':
-    case 's':
-    case 'S':
-      movePlayer(0, 1);
-      break;
-    case 'ArrowLeft':
-    case 'a':
-    case 'A':
-      movePlayer(-1, 0);
-      break;
-    case 'ArrowRight':
-    case 'd':
-    case 'D':
-      movePlayer(1, 0);
-      break;
+  const key = e.key.toLowerCase();
+  const moveKeys = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 's', 'a', 'd'];
+  
+  if (moveKeys.includes(key)) {
+    e.preventDefault(); // デフォルトのスクロール動作を防ぐ
+    
+    if (!keysPressed.has(key)) {
+      keysPressed.add(key);
+      handleMovement(key);
+    }
   }
+});
+
+document.addEventListener('keyup', (e) => {
+  const key = e.key.toLowerCase();
+  keysPressed.delete(key);
 });
 
 // 初期化
