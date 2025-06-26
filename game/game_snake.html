@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="robots" content="noindex" />
+  <meta name="robots" content="noindex">
   <title>すねーくゲーム</title>
   <link rel="stylesheet" href="../css/style_snake.css">
 </head>
-    <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHYJ8XQSZ8"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-KHYJ8XQSZ8');
+  window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+  
+      gtag('config', 'G-KHYJ8XQSZ8');
 </script>
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
+
 <body>
   <h1>すねーくゲーム</h1>
-
-  <canvas id="gameCanvas" width="480" height="320"></canvas>
-
-  <div class="info">
-    ← ↑ ↓ → または W A S D キーで蛇を操作します<br>
-    エサを食べて蛇を長くしよう！
-  </div>
-
+  <canvas id="gameCanvas" width="480" height="320">
+  </canvas>
+  <div class="info">← ↑ ↓ → または W A S D キーで蛇を操作します
+    <br>エサを食べて蛇を長くしよう！</div>
   <div id="score" style="font-size: 18px; margin-top: 10px;">スコア: 0</div>
   <div id="gameOverText" class="game-over" style="display: none;">ゲームオーバー！</div>
   <button id="restartBtn" onclick="restartGame()" style="display: none;">もう一度プレイ</button>
   <button onclick="location.href='../index.html'">戻る</button>
-
   <script src="../script/script_snake.js"></script>
 </body>
+
 </html>
