@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="robots" content="noindex" />
+  <meta name="robots" content="noindex">
   <title>ぶらっくじゃっくゲーム</title>
   <link rel="stylesheet" href="../css/style_bj.css">
 </head>
-    <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHYJ8XQSZ8"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-KHYJ8XQSZ8');
+  window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+  
+      gtag('config', 'G-KHYJ8XQSZ8');
 </script>
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
+
 <body>
   <h1>ぶらっくじゃっくゲーム</h1>
-  <canvas id="gameCanvas" width="700" height="350"></canvas>
-  
+  <canvas id="gameCanvas" width="700" height="350">
+  </canvas>
   <div class="game-info">
-    <div>チップ: <span id="chips">1000</span></div>
-    <div>ベット: <span id="bet">0</span></div>
-    <div>デッキ残り: <span id="deckCount">52</span></div>
+    <div>チップ:
+      <span id="chips">1000</span>
+    </div>
+    <div>ベット:
+      <span id="bet"></span>
+    </div>
+    <div>デッキ残り:
+      <span id="deckCount">52</span>
+    </div>
   </div>
-  
-  <div id="handInfo" class="hand-info"></div>
-  
+  <div id="handInfo" class="hand-info">
+  </div>
   <div class="controls">
     <div id="bettingControls">
       <button onclick="placeBet(10)">10ベット</button>
@@ -37,7 +44,6 @@
       <button onclick="resetBet()" style="background-color: #ffc107; color: #000;">ベットリセット</button>
       <button onclick="deal()" id="dealBtn">ディール</button>
     </div>
-    
     <div id="gameControls" style="display: none;">
       <button onclick="hit()" id="hitBtn">ヒット</button>
       <button onclick="stand()" id="standBtn">スタンド</button>
@@ -47,24 +53,20 @@
       <button onclick="surrender()" id="surrenderBtn" style="display: none; background-color: #6c757d;">サレンダー</button>
     </div>
   </div>
-  
-  <div id="gameResult" style="display: none;"></div>
+  <div id="gameResult" style="display: none;">
+  </div>
   <div id="nextHandBtn" style="display: none;">
     <button onclick="nextHand()">次のハンド</button>
   </div>
-  
-  <div class="info">
-    ブラックジャックの基本ルール：<br>
-    • 21に近づけて、ディーラーに勝利しよう！<br>
-    • A=1または11、J/Q/K=10、その他は数字通り<br>
-    • スプリット、ダブルダウン、インシュアランス対応
-  </div>
-  
+  <div class="info">ブラックジャックの基本ルール：
+    <br>• 21に近づけて、ディーラーに勝利しよう！
+    <br>• A=1または11、J/Q/K=10、その他は数字通り
+    <br>• スプリット、ダブルダウン、インシュアランス対応</div>
   <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 15px;">
     <button onclick="restartGame()" style="background-color: #dc3545;">新しいゲーム</button>
     <button onclick="location.href='../index.html'">戻る</button>
   </div>
-
   <script src="../script/script_bj.js"></script>
 </body>
+
 </html>
